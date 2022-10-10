@@ -1,5 +1,6 @@
 
 // reference: https://stackoverflow.com/questions/64903037/undistort-a-fisheye-image-using-cvfisheyeundistortimage
+//            https://github.com/mesutpiskin/opencv-fisheye-undistortion/blob/master/src/python/fisheye_calibration_undistortion.py
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/features2d.hpp>
