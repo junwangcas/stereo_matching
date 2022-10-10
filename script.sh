@@ -1,0 +1,1 @@
+./main_test_undistort -i /sdcard/stereo_matching/testing/testcase1/cam3_571667480915.bmp -o /sdcard/stereo_matching/testing/testcase1/cam3_undistort.bmp -cam_id 3
