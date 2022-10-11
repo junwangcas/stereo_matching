@@ -12,7 +12,12 @@ import copy
 import numpy as np
 import open3d as o3d
 
-
+# 各个参数进行了类型限制
+# 点云格式为open3d
+# confidence: 似然概率，也就是说所有样本中，内点的比例, 本例中使用的是85%
+# inlier_threshold：就是m单位
+# min_sample_distance：所有采样的点的最小距离 0.8m.
+# error_func： 函数可以作为参数传进来
 def fit_plane(pcd: o3d.geometry.PointCloud,
               confidence: float,
               inlier_threshold: float,
@@ -78,7 +83,7 @@ def fit_plane(pcd: o3d.geometry.PointCloud,
         best_plane = -best_plane
     return best_plane, best_inliers, k
 
-
+# min_points_prop，这是一个重要的控制参数，逐个提取平面，直到剩余的点数不满足以下比例为止。
 def filter_planes(pcd: o3d.geometry.PointCloud,
                   min_points_prop: float,
                   confidence: float,
