@@ -10,6 +10,11 @@
 using namespace std;
 using namespace cv;
 
+void PrintMat(const cv::Mat &mat, const std::string &name)
+{
+    std::cout << name << " " << mat << "\n";
+}
+
 int main(int argc, char const *argv[])
 {
   char* leftimg_filename;
@@ -44,14 +49,23 @@ int main(int argc, char const *argv[])
   fs1["K2"] >> K2;
   fs1["D1"] >> D1;
   fs1["D2"] >> D2;
-  fs1["R"] >> R; // 没有使用
-  fs1["T"] >> T; // 没有使用
+  fs1["R"] >> R;
+  fs1["T"] >> T;
+  PrintMat(K1, "K1");
+  PrintMat(K2, "K2");
+  PrintMat(D1, "D1");
+  PrintMat(D2, "D2");
+  PrintMat(R, "R");
+  std::cout << "T: " << T << "\n";
 
-  fs1["R1"] >> R1;
-  fs1["R2"] >> R2;
-  fs1["P1"] >> P1;
-  fs1["P2"] >> P2;
-  fs1["Q"] >> Q;
+{
+    cv::fisheye::stereoRectify(K1, D1, K2, D2, img1.size(), R, T, R1, R2, P1, P2, Q, 0);
+    PrintMat(R1, "R1");
+    PrintMat(R2, "R2");
+    PrintMat(P1, "P1");
+    PrintMat(P2, "P2");
+    PrintMat(Q, "Q");
+}
 
   cv::Mat lmapx, lmapy, rmapx, rmapy;
   cv::Mat imgU1, imgU2;

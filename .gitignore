@@ -1,4 +1,5 @@
 .idea/
 main
 sourishg_stereo_calibration/cmake-build-debug/
-sourishg_stereo_calibration/yvr_data/
+sourishg_stereo_calibration/vr_data/
+ransac_plane/__pycache__/

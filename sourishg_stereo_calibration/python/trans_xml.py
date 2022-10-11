@@ -29,6 +29,14 @@ def PrintR(rowMajorRotationMat):
         r_str = r_str + ele + ', '
     print(r_str)
 
+def PrintT(translation):
+    print("translation: ")
+    translations = translation.split(' ')
+    t_str = ''
+    for ele in translations:
+        t_str = t_str + ele + ', '
+    print(t_str)
+
 
 root = ET.parse(filexml).getroot()
 for Camera in root.findall('Camera'):
@@ -52,6 +60,7 @@ for Camera in root.findall('Camera'):
     # print('RotationMatrix ', rowMajorRotationMat)
     PrintR(rowMajorRotationMat)
     PrintP(focal_length, principal_point, translation)
+    PrintT(translation)
     print("--------------------------------------------------")
 
 

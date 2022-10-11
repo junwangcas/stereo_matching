@@ -55,9 +55,8 @@ int main(int argc, char const *argv[])
   cv::Mat lmapx, lmapy, rmapx, rmapy;
   cv::Mat imgU1, imgU2;
 
-  // K1 - 内参， D1 - 畸变参数, R1 - 基本是一个单位矩阵，P1 - 貌似是一个K阵和T
+  // K1 - 内参， D1 - 畸变参数, R1 -
   cv::initUndistortRectifyMap(K1, D1, R1, P1, img1.size(), CV_32F, lmapx, lmapy);
-  //
   cv::initUndistortRectifyMap(K2, D2, R2, P2, img2.size(), CV_32F, rmapx, rmapy);
   cv::remap(img1, imgU1, lmapx, lmapy, cv::INTER_LINEAR);
   cv::remap(img2, imgU2, rmapx, rmapy, cv::INTER_LINEAR);
