@@ -3,3 +3,5 @@ main
 sourishg_stereo_calibration/cmake-build-debug/
 sourishg_stereo_calibration/vr_data/
 ransac_plane/__pycache__/
+stereo_tuner/data_temp/
+stereo_tuner/cmake-build-debug/

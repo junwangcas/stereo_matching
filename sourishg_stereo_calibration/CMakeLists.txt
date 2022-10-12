@@ -3,7 +3,7 @@ project(CALIB_CAM)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-find_package(OpenCV REQUIRED)
+find_package(OpenCV 3.4.16 REQUIRED)
 include_directories($(OpenCV_INCLUDE_DIRS))
 
 add_executable(calibrate calib_intrinsic.cpp popt_pp.h)
@@ -18,5 +18,5 @@ target_link_libraries(calibrate_stereo ${OpenCV_LIBS} "-lpopt")
 add_executable(undistort_rectify undistort_rectify.cpp)
 target_link_libraries(undistort_rectify ${OpenCV_LIBS} "-lpopt")
 
-add_executable(undistort_rectify_fisheye undistort_rectify_fisheye.cpp)
+add_executable(undistort_rectify_fisheye fish_eye/undistort_rectify_fisheye.cpp)
 target_link_libraries(undistort_rectify_fisheye ${OpenCV_LIBS} "-lpopt")
