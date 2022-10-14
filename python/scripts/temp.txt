@@ -1,0 +1,20 @@
+1. 生成rectify需要的矫正参数
+./gen_rectify_param -c cam_intrinsics.yml -o rectify_q.yml
+
+2. 利用矫正参数，对图像进行矫正
+./gen_rectify_img -l cam0_571667480915.bmp -r cam3_571667480915.bmp -c rectify_q.yml -L left.pgm -R right.pgm -H left_right.pgm
+
+3. 利用elas，生成disparitymap
+./elas ../sourishg_stereo_calibration/cmake-build-debug/left.pgm ../sourishg_stereo_calibration/cmake-build-debug/right.pgm
+elas自动在目标文件夹下面创建两个disparity，left_disp_float.bmp
+
+4. 利用disparity,生成point cloud
+./gen_pointcloud -d left_disp_float.bmp -c rectify_q.yml -L point_cloud.txt
+
+5. 利用点云文件，进行分割, 显示
+trans_txt_o3d.py --txt_file /home/junwangcas/Documents/stereo_matching/stereo_matching_code/sourishg_stereo_calibration/cmake-build-debug/point_cloud.txt
+
+
+
+
+
