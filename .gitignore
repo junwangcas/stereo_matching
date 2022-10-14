@@ -5,3 +5,5 @@ sourishg_stereo_calibration/vr_data/
 ransac_plane/__pycache__/
 stereo_tuner/data_temp/
 stereo_tuner/cmake-build-debug/
+python/ransac_plane/__pycache__/
+python/ransac_plane/expriment/__pycache__/

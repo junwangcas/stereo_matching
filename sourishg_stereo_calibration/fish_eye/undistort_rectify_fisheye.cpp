@@ -272,6 +272,46 @@ void ShowHconImgs(cv::Mat &img1, cv::Mat &img2, std::string window_name)
     cv::imshow(window_name, left_right_rect_show);
 }
 
+void GetDispartyMap(cv::Mat &left_img_rotate, cv::Mat &right_img_rotate, cv::Mat &disparity)
+{
+    enum { STEREO_BM = 0, STEREO_SGBM = 1, STEREO_HH = 2, STEREO_VAR = 3, STEREO_3WAY = 4 };
+    int numberOfDisparities = ((left_img_rotate.cols / 4) + 15) & -16;
+    printf("********* number of disparities: %d \n",numberOfDisparities);
+    cv::Ptr<cv::StereoSGBM> sgbm = cv::StereoSGBM::create();
+    sgbm->setPreFilterCap(31);
+    int SADWindowSize = 5; // 9;
+    int sgbmWinSize = SADWindowSize > 0 ? SADWindowSize : 3;
+    sgbm->setBlockSize(sgbmWinSize);
+    int cn = left_img_rotate.channels();
+    int min_disp = 1; //0.2; // 3; //1; //5;
+    sgbm->setP1(8 * cn*sgbmWinSize*sgbmWinSize);
+    sgbm->setP2(32 * cn*sgbmWinSize*sgbmWinSize);
+    sgbm->setMinDisparity(min_disp);
+    sgbm->setNumDisparities(numberOfDisparities);
+    sgbm->setUniquenessRatio(5);
+    sgbm->setSpeckleWindowSize(100);
+    sgbm->setSpeckleRange(32);
+    sgbm->setDisp12MaxDiff(1);
+
+    int alg = STEREO_SGBM;
+    if (alg == STEREO_HH)
+        sgbm->setMode(cv::StereoSGBM::MODE_HH);
+    else if (alg == STEREO_SGBM)
+        sgbm->setMode(cv::StereoSGBM::MODE_SGBM);
+    else if (alg == STEREO_3WAY)
+        sgbm->setMode(cv::StereoSGBM::MODE_SGBM_3WAY);
+    sgbm->compute(left_img_rotate, right_img_rotate, disparity);
+
+
+    cv::Mat disparity_color, disp;
+    disparity.convertTo(disp, CV_8U, 255.0 / numberOfDisparities/16.0);
+    //cv::applyColorMap(disp, disparity_color, cv::COLORMAP_JET);
+    cv::applyColorMap(disp, disparity_color, cv::COLORMAP_RAINBOW);
+
+    cv::imshow("RAW RECTIFIED DISP", disparity_color);
+    cv::waitKey(200000000);
+}
+
 
 int main(int argc, char const *argv[])
 {
@@ -318,7 +358,7 @@ int main(int argc, char const *argv[])
 
   std::cout << img1.size() << "\n";
     {
-        stereoRectify3416(K1, D1, K2, D2, img1.size(), R, T, R1, R2, P1, P2, Q, cv::CALIB_ZERO_DISPARITY, img1.size(), 0.5, 1.2);
+        stereoRectify3416(K1, D1, K2, D2, img1.size(), R, T, R1, R2, P1, P2, Q, cv::CALIB_ZERO_DISPARITY, img1.size(), 0.5, 0.5);
 //        cv::fisheye::stereoRectify(K1, D1, K2, D2, img1.size(), R, T, R1, R2, P1, P2, Q, cv::CALIB_ZERO_DISPARITY, img1.size(), 0.5, 1.2);
 //        stereoRectifyVertical(K1, D1, K2, D2, img1.size(), R, T, R1, R2, P1, P2, Q, cv::CALIB_ZERO_DISPARITY, img1.size(), 0.5, 1.2);
         PrintMat(R1, "R1");
@@ -337,8 +377,7 @@ int main(int argc, char const *argv[])
   cv::remap(img1, imgU1, lmapx, lmapy, cv::INTER_CUBIC);
   cv::remap(img2, imgU2, rmapx, rmapy, cv::INTER_CUBIC);
 
-  imwrite(leftout_filename, imgU1);
-  imwrite(rightout_filename, imgU2);
+
 
   cv::Mat left_img_rotate, right_img_rotate, left_right_rect_show;
   cv::rotate(imgU1, left_img_rotate, cv::ROTATE_90_CLOCKWISE);
@@ -349,9 +388,22 @@ int main(int argc, char const *argv[])
         ShowHconImgs(img1, img2, "raw images");
     }
 
-  imwrite("left_rect_rot.bmp", left_img_rotate);
-  imwrite("right_rect_rot.bmp", right_img_rotate);
+    {
+        // save
+        imwrite(leftout_filename, imgU1);
+        imwrite(rightout_filename, imgU2);
+        imwrite("left_rect_rot.pgm", left_img_rotate);
+        imwrite("right_rect_rot.pgm", right_img_rotate);
 
+        cv::FileStorage fs_q("rectify_q.yml", cv::FileStorage::WRITE);
+        fs_q << "Q" << Q;
+        fs_q.release();
+    }
+
+    {
+        cv::Mat disparity;
+        GetDispartyMap(left_img_rotate, right_img_rotate, disparity);
+    }
 
 
   cv::waitKey(0);

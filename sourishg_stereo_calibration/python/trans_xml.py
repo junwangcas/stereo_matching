@@ -1,6 +1,6 @@
 import xml.etree.ElementTree as ET
 
-filexml = '/sdcard/test_case/SLAMRecord/helmet_2022-08-01-15-11-58/device_calibration.xml'
+filexml = '/sdcard/stereo_matching/rongjie_hmd/controller_2022-07-06-05-42-34/device_calibration.xml'
 
 
 def PrintK(focal_length, principal_point):
