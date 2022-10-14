@@ -7,3 +7,5 @@ stereo_tuner/data_temp/
 stereo_tuner/cmake-build-debug/
 python/ransac_plane/__pycache__/
 python/ransac_plane/expriment/__pycache__/
+python/scripts/__pycache__/
+python/scripts/working_space/
